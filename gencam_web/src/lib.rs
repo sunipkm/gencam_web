@@ -6,6 +6,9 @@ mod backend_panel;
 mod frame_history;
 mod wrap_app;
 
+mod egui_dock_hello;
+pub use egui_dock_hello::MyApp;
+
 pub use wrap_app::WrapApp;
 
 /// Time of day as seconds since midnight. Used for clock in demo app.

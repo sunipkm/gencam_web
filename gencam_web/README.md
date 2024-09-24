@@ -3,13 +3,13 @@ This app demonstrates [`egui`](https://github.com/emilk/egui/) and [`eframe`](ht
 
 View the demo app online at <https://egui.rs>.
 
-Run it locally with `cargo run --release -p egui_demo_app`.
+Run it locally with `cargo run --release -p gencam_web`.
 
-`egui_demo_app` can be compiled to WASM and viewed in a browser locally with:
+`gencam_web` can be compiled to WASM and viewed in a browser locally with:
 
 ```sh
 ./scripts/start_server.sh &
-./scripts/build_demo_web.sh --open
+./scripts/build_server.sh --open
 ```
 
 `egui_demo_app` uses [`egui_demo_lib`](https://github.com/emilk/egui/tree/master/crates/egui_demo_lib).

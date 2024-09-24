@@ -45,6 +45,7 @@ eframe = { workspace = true, default-features = false, features = [
 egui = { workspace = true, features = ["callstack", "default", "log"] }
 egui_demo_lib = { workspace = true, features = ["default", "chrono"] }
 egui_extras = { workspace = true, features = ["default", "image"] }
+egui_dock = { workspace = true, features = ["default"] }
 log.workspace = true
 
 # Optional dependencies:

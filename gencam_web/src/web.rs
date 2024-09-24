@@ -2,7 +2,7 @@
 
 use eframe::wasm_bindgen::{self, prelude::*};
 
-use crate::WrapApp;
+use crate::MyApp;
 
 /// Our handle to the web app from JavaScript.
 #[derive(Clone)]
@@ -40,7 +40,7 @@ impl WebHandle {
             .start(
                 canvas,
                 eframe::WebOptions::default(),
-                Box::new(|cc| Ok(Box::new(WrapApp::new(cc)))),
+                Box::new(|cc| Ok(Box::new(MyApp::default()))),
             )
             .await
     }
@@ -53,7 +53,7 @@ impl WebHandle {
     /// Example on how to call into your app from JavaScript.
     #[wasm_bindgen]
     pub fn example(&self) {
-        if let Some(_app) = self.runner.app_mut::<WrapApp>() {
+        if let Some(_app) = self.runner.app_mut::<MyApp>() {
             // _app.example();
         }
     }

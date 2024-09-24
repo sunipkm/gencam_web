@@ -3,4 +3,4 @@ set -eu
 script_path=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
 cd "$script_path"
 
-./build_demo_web.sh && ls -lh ../assets/*.wasm
+./build_server.sh && ls -lh ../assets/*.wasm

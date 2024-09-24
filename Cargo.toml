@@ -52,6 +52,7 @@ egui-wgpu = { git = "https://github.com/mitbailey/egui", branch = "gencam", defa
 egui_demo_lib = { git = "https://github.com/mitbailey/egui", branch = "gencam", default-features = false }
 egui_glow = { git = "https://github.com/mitbailey/egui", branch = "gencam", default-features = false }
 eframe = { git = "https://github.com/mitbailey/egui", branch = "gencam", default-features = false }
+egui_dock = { git = "https://github.com/mitbailey/egui_dock", branch = "gencam", default-features = false}
 
 ahash = { version = "0.8.11", default-features = false, features = [
     "no-rng", # we don't need DOS-protection, so we let users opt-in to it instead
