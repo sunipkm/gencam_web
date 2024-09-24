@@ -6,12 +6,17 @@ crate_name = { workspace = true, default-features = false, features = [
   "cool_feature",
 ] }
 ```
-### Build
+### Build GUI
 ```sh
-$ scripts/build_server.sh
+$ scripts/build_web_server.sh
 ```
 
-### Run
+### Run GUI
 ```sh
-$ scripts/start_server.sh
+$ scripts/start_web_server.sh
+```
+
+### Run websocket backend
+```sh
+$ cd gencam_wsock_server && cargo run --release
 ```
