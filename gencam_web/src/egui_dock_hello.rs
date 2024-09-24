@@ -1,6 +1,7 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")] // hide console window on Windows in release
 
 use std::collections::HashSet;
+use ewebsock::{WsEvent, WsMessage, WsReceiver, WsSender};
 
 use egui::{
     color_picker::{color_edit_button_srgba, Alpha},
@@ -62,6 +63,70 @@ struct MyContext {
     allowed_splits: AllowedSplits,
     show_window_close: bool,
     show_window_collapse: bool,
+
+    pub uri: String,
+    pub ws: Option<WsBackend>,
+    pub ctx: Option<egui::Context>,
+}
+
+struct WsBackend {
+    ws_sender: WsSender,
+    ws_receiver: WsReceiver,
+    events: Vec<WsEvent>,
+    message: String,
+}
+
+impl WsBackend {
+    fn connect(uri: &str, ctx: &Option<egui::Context>) -> Option<WsBackend> {
+        let res = if let Some(ctx) = ctx {
+            let ctx = ctx.clone();
+            let wakeup = move || ctx.request_repaint();
+            ewebsock::connect_with_wakeup(uri, Default::default(), wakeup)
+        } else {
+            ewebsock::connect(uri, Default::default())
+        };
+        match res {
+            Ok((ws_sender, ws_receiver)) => {
+                let ws = WsBackend {
+                    ws_sender,
+                    ws_receiver,
+                    events: Vec::new(),
+                    message: String::new(),
+                };
+                Some(ws)
+            }
+            Err(e) => {
+                eprintln!("Failed to connect to websocket: {}", e);
+                None
+            }
+        }
+    }
+
+    fn close(&mut self) {
+        self.ws_sender.close();
+    }
+
+    fn ui(&mut self, ui: &mut Ui) {
+        while let Some(event) = self.ws_receiver.try_recv() {
+            self.events.push(event);
+        }
+        
+        ui.horizontal(|ui| {
+            ui.label("Message to send:");
+            if ui.text_edit_singleline(&mut self.message).lost_focus()
+                && ui.input(|i| i.key_pressed(egui::Key::Enter))
+            {
+                self.ws_sender
+                    .send(WsMessage::Text(std::mem::take(&mut self.message)));
+            }
+        });
+
+        ui.separator();
+        ui.heading("Received events:");
+        for event in &self.events {
+            ui.label(format!("{event:?}"));
+        }
+    }
 }
 
 pub struct MyApp {
@@ -119,7 +184,7 @@ impl MyContext {
             ui.label("hello :)");
         });
     }
-
+    
     fn simple_demo(&mut self, ui: &mut Ui) {
         ui.heading("My egui Application");
 
@@ -132,6 +197,29 @@ impl MyContext {
             self.age += 1;
         }
         ui.label(format!("Hello '{}', age {}", &self.title, &self.age));
+        let mut disconnect = false;
+        if let Some(ws) = &mut self.ws {
+            ui.horizontal(|ui| {
+                ui.label("WebSocket URI: ");
+                ui.label(&self.uri);
+                if ui.button("Disconnect").clicked() {
+                    disconnect = true;
+                }
+            });
+            ws.ui(ui);
+        } else {
+            ui.horizontal(|ui| {
+                ui.label("WebSocket URI: ");
+                ui.text_edit_singleline(&mut self.uri);
+                if ui.button("Connect").clicked() {
+                    self.ws = WsBackend::connect(&self.uri, &self.ctx);
+                }
+            }); 
+        }
+        if disconnect {
+            self.ws.as_mut().unwrap().close(); // safe to unwrap since disconnect is only true if ws is Some
+            self.ws = None;
+        }
     }
 
     fn style_editor(&mut self, ui: &mut Ui) {
@@ -533,6 +621,10 @@ impl Default for MyApp {
             draggable_tabs: true,
             show_tab_name_on_hover: false,
             allowed_splits: AllowedSplits::default(),
+
+            uri: "ws://localhost:9001".into(),
+            ws: None,
+            ctx: None,
         };
 
         Self {
@@ -544,6 +636,9 @@ impl Default for MyApp {
 
 impl eframe::App for MyApp {
     fn update(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
+        if self.context.ctx.is_none() {
+            self.context.ctx = Some(ctx.clone());
+        }
         TopBottomPanel::top("egui_dock::MenuBar").show(ctx, |ui| {
             egui::menu::bar(ui, |ui| {
                 ui.menu_button("View", |ui| {

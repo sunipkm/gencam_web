@@ -46,6 +46,7 @@ egui = { workspace = true, features = ["callstack", "default", "log"] }
 egui_demo_lib = { workspace = true, features = ["default", "chrono"] }
 egui_extras = { workspace = true, features = ["default", "image"] }
 egui_dock = { workspace = true, features = ["default"] }
+ewebsock = { version = "0.6", features=["tls"] }
 log.workspace = true
 
 # Optional dependencies:

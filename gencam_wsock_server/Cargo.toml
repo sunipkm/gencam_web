@@ -1,0 +1,8 @@
+[package]
+name = "gencam_wsock_server"
+version = "0.0.0"
+authors = ["Sunip Mukherjee <sunipkmukherjee@gmail.com>"]
+edition = "2021"
+
+[dependencies]
+tungstenite = { workspace = true }

@@ -3,6 +3,7 @@ resolver = "2"
 members = [
     "egui_demo_lib",
     "gencam_web",
+    "gencam_wsock_server",
     "xtask",
 ]
 
@@ -53,6 +54,7 @@ egui_demo_lib = { git = "https://github.com/mitbailey/egui", branch = "gencam", 
 egui_glow = { git = "https://github.com/mitbailey/egui", branch = "gencam", default-features = false }
 eframe = { git = "https://github.com/mitbailey/egui", branch = "gencam", default-features = false }
 egui_dock = { git = "https://github.com/mitbailey/egui_dock", branch = "gencam", default-features = false}
+ewebsock = { version = "0.6", default-features = false }
 
 ahash = { version = "0.8.11", default-features = false, features = [
     "no-rng", # we don't need DOS-protection, so we let users opt-in to it instead
@@ -76,6 +78,7 @@ ron = "0.8"
 raw-window-handle = "0.6.0"
 serde = { version = "1", features = ["derive"] }
 thiserror = "1.0.37"
+tungstenite = { version = "0.23.0" }
 web-time = "1.1.0" # Timekeeping for native and web
 wasm-bindgen = "0.2"
 wasm-bindgen-futures = "0.4"
