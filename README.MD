@@ -6,3 +6,12 @@ crate_name = { workspace = true, default-features = false, features = [
   "cool_feature",
 ] }
 ```
+### Build
+```sh
+$ scripts/build_server.sh
+```
+
+### Run
+```sh
+$ scripts/start_server.sh
+```
