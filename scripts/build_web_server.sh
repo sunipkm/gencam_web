@@ -3,7 +3,7 @@ set -eu
 script_path=$( cd "$(dirname "${BASH_SOURCE[0]}")" ; pwd -P )
 cd "$script_path/.."
 
-./scripts/setup_web.sh
+./scripts/setup_web_server.sh
 
 CRATE_NAME="gencam_web"
 
